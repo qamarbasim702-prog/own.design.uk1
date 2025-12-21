@@ -32,7 +32,7 @@ document.getElementById('contactForm').addEventListener('submit', function(event
     const message = document.getElementById('message').value.trim();
     
     if (!name || !email || !message) {
-        alert('Please fill in all fields.');
+        alert('Please  fill in all fields.');
         return;
     }
     
