@@ -4,8 +4,10 @@
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     e.preventDefault();
-    document.querySelector(this.getAttribute('href'))
-      ?.scrollIntoView({ behavior: 'smooth' });
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
   });
 });
 
@@ -19,9 +21,9 @@ const appearOptions = {
   rootMargin: "0px 0px -50px 0px"
 };
 
-const appearOnScroll = new IntersectionObserver(function(entries, observer){
+const appearOnScroll = new IntersectionObserver(function(entries, observer) {
   entries.forEach(entry => {
-    if(!entry.isIntersecting) return;
+    if (!entry.isIntersecting) return;
     entry.target.classList.add('show');
     observer.unobserve(entry.target);
   });
@@ -32,27 +34,40 @@ faders.forEach(fader => {
 });
 
 /* =========================
-   SUBSCRIBE BUTTON (SAFE)
+   SUBSCRIBE FORM (SAFE)
 ========================= */
 const subscribeForm = document.querySelector('.subscribe-form');
-if(subscribeForm){
-  subscribeForm.addEventListener('submit', function(e){
+if (subscribeForm) {
+  subscribeForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    alert('Thank you for subscribing!');
+    alert('Thank you for subscribing! Stay tuned for updates.');
     this.reset();
   });
 }
 
 /* =========================
-   BACK TO TOP BUTTON (OPTIONAL)
+   CONTACT FORM (SAFE)
+========================= */
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+  contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Thank you! Your message has been received. We will respond soon.');
+    this.reset();
+  });
+}
+
+/* =========================
+   BACK TO TOP BUTTON
 ========================= */
 const topBtn = document.createElement('button');
-topBtn.innerText = "↑";
+topBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
 topBtn.id = "topBtn";
+topBtn.setAttribute('aria-label', 'Back to Top');
 document.body.appendChild(topBtn);
 
 window.addEventListener('scroll', () => {
-  if(window.scrollY > 400){
+  if (window.scrollY > 400) {
     topBtn.classList.add('show');
   } else {
     topBtn.classList.remove('show');
@@ -62,36 +77,23 @@ window.addEventListener('scroll', () => {
 topBtn.addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
-const menuToggle = document.getElementById('menuToggle');
-const navMenu = document.getElementById('navMenu');
 
-menuToggle.addEventListener('click', () => {
-  navMenu.classList.toggle('active');
-});
+/* =========================
+   MOBILE MENU TOGGLE
+========================= */
+const menuToggle = document.getElementById('menu-toggle');
+const navMenu = document.querySelector('.menu');
 
-/* Close menu on link click (mobile UX) */
-document.querySelectorAll('#navMenu a').forEach(link => {
-  link.addEventListener('click', () => {
-    navMenu.classList.remove('active');
+if (menuToggle && navMenu) {
+  menuToggle.addEventListener('change', () => {
+    navMenu.classList.toggle('active');
   });
-});
-const contactForm = document.querySelector('.contact-form');
 
-if(contactForm){
-  contactForm.addEventListener('submit', e => {
-    e.preventDefault();
-    alert('Thank you! Your message has been received.');
-    contactForm.reset();
+  // Close menu on link click (mobile UX)
+  document.querySelectorAll('.menu a').forEach(link => {
+    link.addEventListener('click', () => {
+      menuToggle.checked = false;
+      navMenu.classList.remove('active');
+    });
   });
-}const fades = document.querySelectorAll('.fade');
-
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('show');
-    }
-  });
-}, { threshold: 0.2 });
-
-fades.forEach(fade => observer.observe(fade));
-
+}
